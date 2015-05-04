@@ -121,6 +121,9 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
     [super layoutSubviews];
     CGRect contentFrame = self.bounds;
     CGSize imageSize = self.imageView.image.size;
+
+    UIEdgeInsets imageInsets = self.toast.imageInsets;
+    NSInteger textLeftOffset = self.toast.textLeftOffset;
     
     CGFloat statusBarYOffset = self.toast.displayUnderStatusBar ? (CRGetStatusBarHeight()+CRStatusBarViewUnderStatusBarYOffsetAdjustment) : 0;
     contentFrame.size.height = CGRectGetHeight(contentFrame) - statusBarYOffset;
@@ -128,17 +131,18 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
     self.backgroundView.frame = self.bounds;
     
     CGFloat imageXOffset = CRImageViewFrameXOffsetForAlignment(self.toast.imageAlignment, contentFrame.size);
-    self.imageView.frame = CGRectMake(imageXOffset,
-                                      statusBarYOffset,
+    self.imageView.frame = CGRectMake(imageXOffset + imageInsets.left,
+                                      statusBarYOffset + imageInsets.top,
                                       imageSize.width == 0 ?
                                       0 :
-                                      CGRectGetHeight(contentFrame),
+                                      CGRectGetHeight(contentFrame) - (imageInsets.left + imageInsets.right),
                                       imageSize.height == 0 ?
                                       0 :
-                                      CGRectGetHeight(contentFrame));
+                                      CGRectGetHeight(contentFrame) - (imageInsets.top + imageInsets.bottom));
     
     CGFloat imageWidth = imageSize.width == 0 ? 0 : CGRectGetMaxX(_imageView.frame);
     CGFloat x = CRContentXOffsetForViewAlignmentAndWidth(self.toast.imageAlignment, imageWidth);
+    x = x + imageInsets.right + textLeftOffset;
     
     if (self.toast.showActivityIndicator) {
         CGFloat centerX = CRCenterXForActivityIndicatorWithAlignment(self.toast.activityViewAlignment, CGRectGetHeight(contentFrame), CGRectGetWidth(contentFrame));

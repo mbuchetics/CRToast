@@ -198,6 +198,7 @@ NSString *const kCRToastTextKey                             = @"kCRToastTextKey"
 NSString *const kCRToastFontKey                             = @"kCRToastFontKey";
 NSString *const kCRToastTextColorKey                        = @"kCRToastTextColorKey";
 NSString *const kCRToastTextAlignmentKey                    = @"kCRToastTextAlignmentKey";
+NSString *const kCRToastTextLeftOffsetKey                   = @"kCRToastTextLeftOffsetKey";
 NSString *const kCRToastTextShadowColorKey                  = @"kCRToastTextShadowColorKey";
 NSString *const kCRToastTextShadowOffsetKey                 = @"kCRToastTextShadowOffsetKey";
 NSString *const kCRToastTextMaxNumberOfLinesKey             = @"kCRToastTextMaxNumberOfLinesKey";
@@ -216,6 +217,8 @@ NSString *const kCRToastBackgroundViewKey                   = @"kCRToastBackgrou
 NSString *const kCRToastImageKey                            = @"kCRToastImageKey";
 NSString *const kCRToastImageContentModeKey                 = @"kCRToastImageContentModeKey";
 NSString *const kCRToastImageAlignmentKey                   = @"kCRToastImageAlignmentKey";
+NSString *const kCRToastImageInsetsKey                      = @"kCRToastImageInsetsKey";
+
 NSString *const kCRToastShowActivityIndicatorKey            = @"kCRToastShowActivityIndicatorKey";
 NSString *const kCRToastActivityIndicatorViewStyleKey       = @"kCRToastActivityIndicatorViewStyleKey";
 NSString *const kCRToastActivityIndicatorAlignmentKey       = @"kCRToastActivityIndicatorAlignmentKey";
@@ -253,6 +256,7 @@ static NSString *                    kCRTextDefault                         = @"
 static UIFont   *                    kCRFontDefault                         = nil;
 static UIColor  *               	 kCRTextColorDefault                    = nil;
 static NSTextAlignment          	 kCRTextAlignmentDefault                = NSTextAlignmentCenter;
+static NSInteger                     kCRToastTextLeftOffsetDefault          = 0;
 static UIColor  *               	 kCRTextShadowColorDefault              = nil;
 static CGSize                   	 kCRTextShadowOffsetDefault;
 static NSInteger                     kCRTextMaxNumberOfLinesDefault         = 0;
@@ -271,6 +275,8 @@ static UIView   *                    kCRBackgroundView                      = ni
 static UIImage  *                    kCRImageDefault                        = nil;
 static UIViewContentMode             kCRImageContentModeDefault             = UIViewContentModeCenter;
 static CRToastAccessoryViewAlignment kCRImageAlignmentDefault               = CRToastAccessoryViewAlignmentLeft;
+static UIEdgeInsets                  kCRToastImageInsetsDefault             = {0, 0, 0, 0};
+
 static BOOL                          kCRShowActivityIndicatorDefault        = NO;
 static UIActivityIndicatorViewStyle  kCRActivityIndicatorViewStyleDefault   = UIActivityIndicatorViewStyleWhite;
 static CRToastAccessoryViewAlignment kCRActivityIndicatorAlignmentDefault   = CRToastAccessoryViewAlignmentLeft;
@@ -327,6 +333,7 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
                                 kCRToastFontKey                             : NSStringFromClass([UIFont class]),
                                 kCRToastTextColorKey                        : NSStringFromClass([UIColor class]),
                                 kCRToastTextAlignmentKey                    : NSStringFromClass([@(kCRTextAlignmentDefault) class]),
+                                kCRToastTextLeftOffsetKey                   : NSStringFromClass([@(kCRToastTextLeftOffsetDefault) class]),
                                 kCRToastTextShadowColorKey                  : NSStringFromClass([UIColor class]),
                                 kCRToastTextShadowOffsetKey                 : NSStringFromClass([[NSValue valueWithCGSize:kCRTextShadowOffsetDefault] class]),
                                 kCRToastTextMaxNumberOfLinesKey             : NSStringFromClass([@(kCRTextMaxNumberOfLinesDefault) class]),
@@ -344,6 +351,7 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
                                 kCRToastImageKey                            : NSStringFromClass([UIImage class]),
                                 kCRToastImageContentModeKey                 : NSStringFromClass([@(kCRImageContentModeDefault) class]),
                                 kCRToastImageAlignmentKey                   : NSStringFromClass([@(kCRImageAlignmentDefault) class]),
+                                kCRToastImageInsetsKey                      : NSStringFromClass([[NSValue valueWithUIEdgeInsets:kCRToastImageInsetsDefault] class]),
                                 kCRToastShowActivityIndicatorKey            : NSStringFromClass([@(kCRShowActivityIndicatorDefault) class]),
                                 kCRToastActivityIndicatorViewStyleKey       : NSStringFromClass([@(kCRActivityIndicatorViewStyleDefault) class]),
                                 kCRToastActivityIndicatorAlignmentKey       : NSStringFromClass([@(kCRActivityIndicatorAlignmentDefault) class]),
@@ -397,6 +405,7 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
     if (defaultOptions[kCRToastFontKey])                            kCRFontDefault                          = defaultOptions[kCRToastFontKey];
     if (defaultOptions[kCRToastTextColorKey])                       kCRTextColorDefault                     = defaultOptions[kCRToastTextColorKey];
     if (defaultOptions[kCRToastTextAlignmentKey])                   kCRTextAlignmentDefault                 = [defaultOptions[kCRToastTextAlignmentKey] integerValue];
+    if (defaultOptions[kCRToastTextLeftOffsetKey])                  kCRToastTextLeftOffsetDefault           = [defaultOptions[kCRToastTextLeftOffsetKey] integerValue];
     if (defaultOptions[kCRToastTextShadowColorKey])                 kCRTextShadowColorDefault               = defaultOptions[kCRToastTextShadowColorKey];
     if (defaultOptions[kCRToastTextShadowOffsetKey])                kCRTextShadowOffsetDefault              = [defaultOptions[kCRToastTextShadowOffsetKey] CGSizeValue];
     if (defaultOptions[kCRToastTextMaxNumberOfLinesKey])            kCRTextMaxNumberOfLinesDefault          = [defaultOptions[kCRToastTextMaxNumberOfLinesKey] integerValue];
@@ -416,6 +425,7 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
     if (defaultOptions[kCRToastImageKey])                           kCRImageDefault                         = defaultOptions[kCRToastImageKey];
     if (defaultOptions[kCRToastImageContentModeKey])                kCRImageContentModeDefault              = [defaultOptions[kCRToastImageContentModeKey] integerValue];
     if (defaultOptions[kCRToastImageAlignmentKey])                  kCRImageAlignmentDefault                = [defaultOptions[kCRToastImageAlignmentKey] integerValue];
+    if (defaultOptions[kCRToastImageInsetsKey])                     kCRToastImageInsetsDefault             = [defaultOptions[kCRToastImageInsetsKey] UIEdgeInsetsValue];
     if (defaultOptions[kCRToastShowActivityIndicatorKey])           kCRShowActivityIndicatorDefault         = [defaultOptions[kCRToastShowActivityIndicatorKey] boolValue];
     if (defaultOptions[kCRToastActivityIndicatorViewStyleKey])      kCRActivityIndicatorViewStyleDefault    = [defaultOptions[kCRToastActivityIndicatorViewStyleKey] integerValue];
     if (defaultOptions[kCRToastActivityIndicatorAlignmentKey])      kCRActivityIndicatorAlignmentDefault    = [defaultOptions[kCRToastActivityIndicatorAlignmentKey] integerValue];
@@ -624,6 +634,10 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
     return _options[kCRToastTextAlignmentKey] ? [_options[kCRToastTextAlignmentKey] integerValue] : kCRTextAlignmentDefault;
 }
 
+- (NSInteger)textLeftOffset {
+    return _options[kCRToastTextLeftOffsetKey] ? [_options[kCRToastTextLeftOffsetKey] integerValue] : kCRToastTextLeftOffsetDefault;
+}
+
 - (UIColor*)textShadowColor {
     return _options[kCRToastTextShadowColorKey] ?: kCRTextShadowColorDefault;
 }
@@ -678,6 +692,10 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
 
 - (CRToastAccessoryViewAlignment)imageAlignment {
     return _options[kCRToastImageAlignmentKey] ? [_options[kCRToastImageAlignmentKey] integerValue] : kCRImageAlignmentDefault;
+}
+
+- (UIEdgeInsets)imageInsets {
+    return _options[kCRToastImageInsetsKey] ? [_options[kCRToastImageInsetsKey] UIEdgeInsetsValue] : kCRToastImageInsetsDefault;
 }
 
 - (BOOL)showActivityIndicator {

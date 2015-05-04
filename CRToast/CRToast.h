@@ -236,6 +236,11 @@ extern NSString *const kCRToastTextColorKey;
 extern NSString *const kCRToastTextAlignmentKey;
 
 /**
+ The left offset from the image and the text (`kCRToastTextKey`). Expects type `NSInteger`.
+*/
+extern NSString *const kCRToastTextLeftOffsetKey;
+
+/**
  The shadow color to be used for the `kCRToastTextKey` value . Expects type `UIColor`.
  */
 extern NSString *const kCRToastTextShadowColorKey;
@@ -314,6 +319,11 @@ extern NSString *const kCRToastImageContentModeKey;
  The image alignment to use. Expects type `CRToastAccessoryViewAlignment`.
  */
 extern NSString *const kCRToastImageAlignmentKey;
+
+/**
+ The insets for the image. Expects type `UIEdgeInsets`.
+*/
+extern NSString *const kCRToastImageInsetsKey;
 
 /**
  BOOL setting whether the CRToast should show a loading indicator in the left image location.
@@ -441,6 +451,11 @@ extern NSString *const kCRToastCaptureDefaultWindowKey;
 
 - (void)swipeGestureRecognizerSwiped:(CRToastSwipeGestureRecognizer*)swipeGestureRecognizer;
 - (void)tapGestureRecognizerTapped:(CRToastTapGestureRecognizer*)tapGestureRecognizer;
+
+- (NSInteger)textLeftOffset;
+
+- (UIEdgeInsets)imageInsets;
+
 - (void)initiateAnimator:(UIView *)view;
 
 @end
