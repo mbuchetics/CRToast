@@ -93,6 +93,7 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         
         UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectZero];
         imageView.userInteractionEnabled = NO;
+        imageView.clipsToBounds = YES;
         imageView.contentMode = UIViewContentModeCenter;
         [self addSubview:imageView];
         self.imageView = imageView;
@@ -129,16 +130,14 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
     contentFrame.size.height = CGRectGetHeight(contentFrame) - statusBarYOffset;
     
     self.backgroundView.frame = self.bounds;
+
+    CGFloat h = CGRectGetHeight(contentFrame) - (imageInsets.top + imageInsets.bottom);
     
     CGFloat imageXOffset = CRImageViewFrameXOffsetForAlignment(self.toast.imageAlignment, contentFrame.size);
     self.imageView.frame = CGRectMake(imageXOffset + imageInsets.left,
                                       statusBarYOffset + imageInsets.top,
-                                      imageSize.width == 0 ?
-                                      0 :
-                                      CGRectGetHeight(contentFrame) - (imageInsets.left + imageInsets.right),
-                                      imageSize.height == 0 ?
-                                      0 :
-                                      CGRectGetHeight(contentFrame) - (imageInsets.top + imageInsets.bottom));
+                                      imageSize.width == 0 ? 0 : h,
+                                      imageSize.height == 0 ? 0 : h);
     
     CGFloat imageWidth = imageSize.width == 0 ? 0 : CGRectGetMaxX(_imageView.frame);
     CGFloat x = CRContentXOffsetForViewAlignmentAndWidth(self.toast.imageAlignment, imageWidth);
